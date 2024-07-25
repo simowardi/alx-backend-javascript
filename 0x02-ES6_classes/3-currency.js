@@ -31,10 +31,7 @@ class Currency {
   get name() {
     return this._name;
   }
-  /**
-   * Creates the full string representation of this Currency.
-   * @returns {String}
-   */
+
   displayFullCurrency() {
     return `${this.name} (${this.code})`;
   }
