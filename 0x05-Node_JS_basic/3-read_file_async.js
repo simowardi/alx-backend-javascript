@@ -5,7 +5,7 @@ const fs = require('fs').promises;
  * @param {string} path - The path to the CSV file.
  * @returns {Promise<void>} A promise that resolves when the counting is done.
  * @throws {Error} Throws an error if the database cannot be loaded.
- */
+**/
 async function countStudents(path) {
   try {
     // Read the file asynchronously
