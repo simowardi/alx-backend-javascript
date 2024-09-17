@@ -6,23 +6,19 @@
  * for input and output operations.
  */
 
-// Display the welcome message
 process.stdout.write('Welcome to Holberton School, what is your name?\n');
 
-// Listen for data on stdin
-process.stdin.on('readable', () => {
-  // Read the chunk of data
-  const chunk = process.stdin.read();
-  if (chunk !== null) {
-    // Remove the newline character from the input
-    const name = chunk.toString().trim();
-    // Display the user's name
-    process.stdout.write(`Your name is: ${name}\n`);
-  }
-});
-
-// Listen for the 'end' event on stdin
-process.stdin.on('end', () => {
-  // Display the closing message
-  process.stdout.write('This important software is now closing\n');
-});
+if (process.stdin.isTTY) {
+  process.stdin.on('data', (msg) => {
+    process.stdout.write(`Your name is: ${msg.toString()}`);
+    process.exit();
+  });
+} else {
+  process.stdin.on('data', (msg) => {
+    process.stdout.write(`Your name is: ${msg.toString()}`);
+    process.exit();
+  });
+  process.on('exit', () => {
+    process.stdout.write('This important software is now closing\n');
+  });
+}
