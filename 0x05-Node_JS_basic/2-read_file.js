@@ -1,42 +1,37 @@
 const fs = require('fs');
 
-/**
- * Counts the number of students in different fields from a CSV file.
- * @param {string} path - The path to the CSV file.
- * @throws {Error} Throws an error if the database cannot be loaded.
-**/
-
-
-function countStudents(path) {
+function countStudents(fileName) {
+  const students = {};
+  const fields = {};
+  let length = 0;
   try {
-    // Read the file synchronously
-    const data = fs.readFileSync(path, 'utf8');
-
-    // Split the data into lines and filter out empty lines
-    const lines = data.split('\n').filter(line => line.trim() !== '');
-
-    // Remove the header line
-    const students = lines.slice(1);
-
-    console.log(`Number of students: ${students.length}`);
-
-    // Count students in each field
-    const fields = {};
-    students.forEach(student => {
-      const [firstName, , , field] = student.split(',');
-      if (!fields[field]) {
-        fields[field] = { count: 0, students: [] };
+    const fileContents = fs.readFileSync(fileName, 'utf-8');
+    const lines = fileContents.toString().split('\n');
+    for (let i = 0; i < lines.length; i += 1) {
+      if (lines[i]) {
+        length += 1;
+        const field = lines[i].toString().split(',');
+        if (Object.prototype.hasOwnProperty.call(students, field[3])) {
+          students[field[3]].push(field[0]);
+        } else {
+          students[field[3]] = [field[0]];
+        }
+        if (Object.prototype.hasOwnProperty.call(fields, field[3])) {
+          fields[field[3]] += 1;
+        } else {
+          fields[field[3]] = 1;
+        }
       }
-      fields[field].count += 1;
-      fields[field].students.push(firstName);
-    });
-
-    // Log the results
-    for (const [field, data] of Object.entries(fields)) {
-      console.log(`Number of students in ${field}: ${data.count}. List: ${data.students.join(', ')}`);
+    }
+    const l = length - 1;
+    console.log(`Number of students: ${l}`);
+    for (const [key, value] of Object.entries(fields)) {
+      if (key !== 'field') {
+        console.log(`Number of students in ${key}: ${value}. List: ${students[key].join(', ')}`);
+      }
     }
   } catch (error) {
-    throw new Error('Cannot load the database');
+    throw Error('Cannot load the database');
   }
 }
 
